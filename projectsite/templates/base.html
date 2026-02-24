@@ -110,8 +110,7 @@
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
-										<div class="u-img"><img src="assets/img/profile.jpg" alt="user"></div>
-										<div class="u-text">
+                                    <div class="u-img"><img src="{% static 'img/profile.jpg' %}" alt="user"></div>										<div class="u-text">
 											<h4>Hizrian</h4>
 											<p class="text-muted">hello@themekita.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
 										</div>
@@ -135,7 +134,7 @@
 				<div class="scrollbar-inner sidebar-wrapper">
 					<div class="user">
 						<div class="photo">
-							<img src="assets/img/profile.jpg">
+							<img src="{% static 'img/profile.jpg' %}">
 						</div>
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
@@ -173,56 +172,34 @@
 							<a href="index.html">
 								<i class="la la-dashboard"></i>
 								<p>Dashboard</p>
-								<span class="badge badge-count">5</span>
+	
 							</a>
 						</li>
 						<li class="nav-item">
 							<a href="components.html">
 								<i class="la la-table"></i>
-								<p>Components</p>
-								<span class="badge badge-count">14</span>
 							</a>
+                            <p>Organization</p>
 						</li>
 						<li class="nav-item">
 							<a href="forms.html">
 								<i class="la la-keyboard-o"></i>
-								<p>Forms</p>
-								<span class="badge badge-count">50</span>
 							</a>
+                            <p>Org. Members</p>
 						</li>
 						<li class="nav-item">
 							<a href="tables.html">
 								<i class="la la-th"></i>
-								<p>Tables</p>
-								<span class="badge badge-count">6</span>
 							</a>
+                            <p>Student</p>
 						</li>
 						<li class="nav-item">
 							<a href="notifications.html">
 								<i class="la la-bell"></i>
-								<p>Notifications</p>
-								<span class="badge badge-success">3</span>
 							</a>
+                            <p>College</p>
 						</li>
-						<li class="nav-item active">
-							<a href="typography.html">
-								<i class="la la-font"></i>
-								<p>Typography</p>
-								<span class="badge badge-danger">25</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="icons.html">
-								<i class="la la-fonticons"></i>
-								<p>Icons</p>
-							</a>
-						</li>
-						<li class="nav-item update-pro">
-							<button  data-toggle="modal" data-target="#modalUpdate">
-								<i class="la la-hand-pointer-o"></i>
-								<p>Update To Pro</p>
-							</button>
-						</li>
+						
 					</ul>
 				</div>
 			</div>
@@ -417,23 +394,5 @@
 		</div>
 	</div>
 </body>
-<script src="{% static 'js/core/jquery.3.2.1.min.js' %}"></script>
-<script src="{% static 'js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
-<script src="{% static 'js/core/popper.min.js' %}"></script>
-<script src="{% static 'js/core/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/plugin/chartist/chartist.min.js' %}"></script>
-<script src="{% static 'js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js' %}"></script>
-<script src="{% static 'js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
-<script src="{% static 'js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
-<script src="{% static 'js/plugin/jquery-mapael/jquery.mapael.min.js' %}"></script>
-<script src="{% static 'js/plugin/jquery-mapael/maps/world_countries.min.js' %}"></script>
-<script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
-<script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
-<script src="{% static 'js/ready.min.js' %}"></script>
-
-<div class="main-panel">
-     {% block content %}
-     {% endblock %}
-</div>
 
 </html>
