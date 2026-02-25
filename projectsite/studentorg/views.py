@@ -5,31 +5,55 @@ from studentorg.models import Organization, Student, College, Program, OrgMember
 from studentorg.forms import OrganizationForm
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-# --- HOME ---
-class HomePageView(ListView):  
-    model = Organization  
-    context_object_name = 'home'  
+class HomePageView(LoginRequiredMixin, ListView):
+    model = Organization
+    context_object_name = 'home'
     template_name = "home.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_students'] = Student.objects.count()
+        context['total_organizations'] = Organization.objects.count()
+        context['total_colleges'] = College.objects.count()
+        context['total_programs'] = Program.objects.count() # Added for Dashboard task
+        
+        current_year = timezone.now().year
+        context['students_joined_this_year'] = Student.objects.filter(created_at__year=current_year).count()
+        
+        return context
+
 # --- ORGANIZATION ---
-class OrganizationList(ListView):  
-    model = Organization  
-    context_object_name = 'object_list' 
-    template_name = 'org_list.html'  
+class OrganizationList(ListView):
+    model = Organization
+    template_name = 'org_list.html'
+    context_object_name = 'organization'
     paginate_by = 5
+    ordering = ["college__college_name", "name"] # Added Sorting Task
+def get_queryset(self):
+    query = self.request.GET.get('q')
+    sort_by = self.request.GET.get('sort_by')
+    
+    queryset = OrgMember.objects.all()
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        query = self.request.GET.get('q')
+    if query:
+        queryset = queryset.filter(
+            Q(student__lastname__icontains=query) |
+            Q(student__firstname__icontains=query) |
+            Q(organization__name__icontains=query)
+        )
 
-        if query:
-            qs = qs.filter(
-                Q(name__icontains=query) |
-                Q(description__icontains=query)
-            )
-        return qs
-
+    # Consistent sorting logic
+    if sort_by:
+        # If student name is chosen, we sort by lastname then firstname
+        if sort_by == 'student__lastname':
+            return queryset.order_by('student__lastname', 'student__firstname')
+        return queryset.order_by(sort_by)
+        
+    # Default fallback
+    return queryset.order_by('student__lastname')
 
 class OrganizationCreateView(CreateView): 
     model = Organization 
@@ -92,9 +116,7 @@ class CollegeListView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
-            return College.objects.filter(
-                Q(college_name__icontains=query)
-            )
+            return College.objects.filter(Q(college_name__icontains=query))
         return College.objects.all()
 
 class CollegeCreateView(CreateView):
@@ -119,16 +141,17 @@ class ProgramListView(ListView):
     model = Program
     template_name = 'program_list.html'
     context_object_name = 'object_list'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         query = self.request.GET.get('q')
+        queryset = Program.objects.all()
         if query:
-            return Program.objects.filter(
+            queryset = queryset.filter(
                 Q(prog_name__icontains=query) | 
                 Q(college__college_name__icontains=query)
             )
-        return Program.objects.all()
+        return queryset.order_by("prog_name")
 
 class ProgramCreateView(CreateView):
     model = Program
@@ -152,18 +175,30 @@ class OrgMemberListView(ListView):
     model = OrgMember
     template_name = 'orgmember_list.html'
     context_object_name = 'object_list'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         query = self.request.GET.get('q')
+        sort_by = self.request.GET.get('sort_by') # This must match the 'name' attribute in your HTML <select>
+    
+        queryset = OrgMember.objects.all()
+        # 2. Apply Search
         if query:
-            return OrgMember.objects.filter(
-                Q(student__lastname__icontains=query) | 
+            queryset = queryset.filter(
+                Q(student__lastname__icontains=query) |
                 Q(student__firstname__icontains=query) |
                 Q(organization__name__icontains=query)
             )
-        return OrgMember.objects.all()
-
+        # 3. Apply Sorting (Task Implementation)
+        if sort_by == 'date':
+            # Sort by Date Joined (Oldest first)
+            return queryset.order_by('date_joined')
+        elif sort_by == 'name_desc':
+            # Reverse alphabetical
+            return queryset.order_by('-student__lastname', '-student__firstname')
+        else:
+            # Default: Sort by Student's Name (Lastname, then Firstname)
+            return queryset.order_by('student__lastname', 'student__firstname')
 class OrgMemberCreateView(CreateView):
     model = OrgMember
     fields = '__all__'
