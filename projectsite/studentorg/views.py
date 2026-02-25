@@ -15,17 +15,21 @@ class HomePageView(ListView):
 # --- ORGANIZATION ---
 class OrganizationList(ListView):  
     model = Organization  
-    context_object_name = 'object_list' # Changed to object_list for template consistency
+    context_object_name = 'object_list' 
     template_name = 'org_list.html'  
     paginate_by = 5
 
     def get_queryset(self):
+        qs = super().get_queryset()
         query = self.request.GET.get('q')
+
         if query:
-            return Organization.objects.filter(
-                Q(name__icontains=query) | Q(description__icontains=query)
+            qs = qs.filter(
+                Q(name__icontains=query) |
+                Q(description__icontains=query)
             )
-        return Organization.objects.all()
+        return qs
+
 
 class OrganizationCreateView(CreateView): 
     model = Organization 
@@ -120,7 +124,6 @@ class ProgramListView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
-            # Matches 'prog_name' from your models.py
             return Program.objects.filter(
                 Q(prog_name__icontains=query) | 
                 Q(college__college_name__icontains=query)
