@@ -171,6 +171,7 @@ class ProgramDeleteView(DeleteView):
     success_url = reverse_lazy('program-list')
 
 # --- ORGMEMBER ---
+# --- ORGMEMBER ---
 class OrgMemberListView(ListView):
     model = OrgMember
     template_name = 'orgmember_list.html'
@@ -179,25 +180,30 @@ class OrgMemberListView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-        sort_by = self.request.GET.get('sort_by') # This must match the 'name' attribute in your HTML <select>
+        sort_by = self.request.GET.get('sort_by') 
     
         queryset = OrgMember.objects.all()
-        # 2. Apply Search
+
+        # 1. Apply Search
         if query:
             queryset = queryset.filter(
                 Q(student__lastname__icontains=query) |
                 Q(student__firstname__icontains=query) |
                 Q(organization__name__icontains=query)
             )
-        # 3. Apply Sorting (Task Implementation)
-        if sort_by == 'date':
-            # Sort by Date Joined (Oldest first)
+
+        # 2. Apply Sorting - FIXED MATCHING LOGIC
+        if sort_by == 'date_joined':  # Changed from 'date' to 'date_joined' to match HTML
             return queryset.order_by('date_joined')
+        
+        elif sort_by == 'organization': # Added to match the Program-style dropdown
+            return queryset.order_by('organization__name', 'student__lastname')
+
         elif sort_by == 'name_desc':
-            # Reverse alphabetical
             return queryset.order_by('-student__lastname', '-student__firstname')
+            
         else:
-            # Default: Sort by Student's Name (Lastname, then Firstname)
+            # Default: Alphabetical
             return queryset.order_by('student__lastname', 'student__firstname')
 class OrgMemberCreateView(CreateView):
     model = OrgMember
