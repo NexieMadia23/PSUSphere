@@ -87,7 +87,18 @@
                                 <div class="dropdown-divider"></div>
                                 <li><a class="dropdown-item" href="#"><i class="la la-user"></i> My Profile</a></li>
                                 <div class="dropdown-divider"></div>
-                                <li><a class="dropdown-item" href="#"><i class="la la-power-off"></i> Logout</a></li>
+                                <li>
+                                <form method="post" action="{% url 'account_logout' %}" style="display: inline;">
+                                 {% csrf_token %}
+                                <button type="submit" class="dropdown-item">
+                                <li>
+                                    <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item" style="border: none; background: none; width: 100%; text-align: left;">
+                                            <i class="la la-power-off"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>                       
                             </ul>
                         </li>
                     </ul>
