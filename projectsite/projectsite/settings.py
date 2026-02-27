@@ -27,8 +27,7 @@ SECRET_KEY = 'django-insecure-m=bne%qw7k-%&xc4(w3qowa-kp!_ewkn8hxe__ye0@_ga3fvs3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'psusphere.pythonanywhere.com']
-
+ALLOWED_HOSTS = ['127.0.0.1', 'nexiegh.pythonanywhere.com']
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,27 +37,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'studentorg',
+    'django.contrib.sites',  # System apps first
+
     'widget_tweaks',
-    'django.contrib.sites',    
     'allauth', 
     'allauth.account', 
     'allauth.socialaccount', 
     'allauth.socialaccount.providers.google', 
     'allauth.socialaccount.providers.github',
 
+    'studentorg', # Custom apps last
+    
 ]
-if "pythonanywhere" in socket.gethostname(): 
-    SITE_ID = 2  # production site (psusphere.pythonanywhere.com) 
-else: 
-    SITE_ID = 1  # local site (127.0.0.1:8000)
 
-
- 
-AUTHENTICATION_BACKENDS = [ 
-    'django.contrib.auth.backends.ModelBackend',       
-    'allauth.account.auth_backends.AuthenticationBackend', 
-] 
+SITE_ID = 1
  
 
 MIDDLEWARE = [

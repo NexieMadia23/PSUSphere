@@ -17,4 +17,4 @@ class OrgMemberAdmin(admin.ModelAdmin):
     
     def get_member_program(self, obj):  
         return obj.student.program # Simplified: Django handles the lookup for you
-    get_member_program.short_description = 'Program' # Renames the column in Admin
+    get_member_program.short_description = 'Program' # Renames the column in AdminZ
