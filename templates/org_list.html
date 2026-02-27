@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h4 class="page-title">Organizations</h4>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">List of Registered Organizations</div>
+                <div class="card-category">Manage university organizations</div>
+            </div>
+            <br />
+            <div class="col-md-12 row">
+                <div class="col-md-6">
+                    <form class="navbar-left navbar-form nav-search mr-md-3" action="{% url 'organization-list' %}" method="get">
+                        <div class="input-group">
+                            <input type="text" placeholder="Search ..." class="form-control" name="q" value="{{ request.GET.q }}" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <button type="submit" style="background:transparent; border:none; padding:0;">
+                                        <i class="la la-search search-icon"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="pull-right">
+                        <a href="{% url 'organization-add' %}" class="btn btn-success btn-rounded">Add Organization</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th scope="col">Organization Name</th>
+                                <th scope="col">College</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for object in object_list %}
+                            <tr>
+                                <td><strong>{{ object.name }}</strong></td>
+                                <td>{{ object.college.college_name|default:"N/A" }}</td>
+                                <td>{{ object.description|truncatechars:50 }}</td>
+                                <td>
+                                    <a href="{% url 'organization-update' object.id %}">Edit</a> | 
+                                    <a href="{% url 'organization-delete' object.id %}" class="text-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" style="text-align: center">
+                                    <p class="text-sm font-weight-bold mb-0">No Organizations Found</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'includes/pagination.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
