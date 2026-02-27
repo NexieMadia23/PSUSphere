@@ -72,14 +72,14 @@
                         <li class="nav-item dropdown">
                             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> 
                                 <img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
-                                <span>Admin</span> 
+                                <span>{{ request.user.username }}</span> 
                             </a>
                             <ul class="dropdown-menu dropdown-user">
                                 <li>
                                     <div class="user-box">
                                         <div class="u-img"><img src="{% static 'img/profile.jpg' %}" alt="user"></div>
                                         <div class="u-text">
-                                            <h4>Admin Account</h4>
+                                            <h4>{{ request.user.username }}</h4> 
                                             <p class="text-muted">admin@psusphere.com</p>
                                         </div>
                                     </div>
@@ -104,7 +104,7 @@
                     <div class="info">
                         <a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
                             <span>
-                                Admin Account
+                                {{ request.user.username }} 
                                 <span class="user-level">Administrator</span>
                             </span>
                         </a>
